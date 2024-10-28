@@ -34,6 +34,8 @@ public:
     QString configPath();
     bool configLoaded();
 
+    class ScopeGuard;
+
 private:
     friend class InitInferEngineTask;
     friend class LoadInferConfigTask;
@@ -66,5 +68,15 @@ private:
     QString m_configPath;
 };
 
+class InferEngine::ScopeGuard {
+public:
+    ScopeGuard() = default;
+
+    ~ScopeGuard() {
+        if (auto instance = InferEngine::instance()) {
+            instance->dispose();
+        }
+    }
+};
 
 #endif // INFERENGINE_H

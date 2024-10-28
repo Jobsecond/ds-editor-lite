@@ -14,6 +14,7 @@
 #include "Modules/Audio/subsystem/OutputSystem.h"
 #include "Modules/Audio/utils/DeviceTester.h"
 #include "Modules/History/HistoryManager.h"
+#include "Modules/Inference/InferEngine.h"
 #include "UI/Window/MainWindow.h"
 #include "UI/Window/TaskWindow.h"
 #include "Utils/Log.h"
@@ -134,6 +135,9 @@ int main(int argc, char *argv[]) {
     //     note->setLanguage("cmn");
     //     clipController->onInsertNote(note);
     // }
+
+    // Automatically dispose infer engine on main function return (app exit)
+    InferEngine::ScopeGuard inferScopeGuard;
 
     const auto time = static_cast<double>(mstimer.nsecsElapsed()) / 1000000.0;
     qInfo() << "App launched in" << time << "ms";
