@@ -26,6 +26,10 @@
 #include <QStyleFactory>
 #include <QTranslator>
 
+#ifdef Q_OS_WIN
+#  include <QWDMHCore/DirectManipulationSystem.h>
+#endif
+
 int main(int argc, char *argv[]) {
     QElapsedTimer mstimer;
     mstimer.start();
@@ -38,7 +42,7 @@ int main(int argc, char *argv[]) {
     if (QSysInfo::productType() == "windows")
         QGuiApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
     QApplication a(argc, argv);
-    QApplication::setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents);
+    // QApplication::setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents);
     QApplication::setEffectEnabled(Qt::UI_AnimateTooltip, false);
     QApplication::setOrganizationName("OpenVPI");
     QApplication::setApplicationName("DS Editor Lite");
@@ -75,6 +79,9 @@ int main(int argc, char *argv[]) {
     if (translator.load(":translate/translation_zh_CN.qm"))
         QApplication::installTranslator(&translator);
 
+#ifdef Q_OS_WIN
+    QWDMH::DirectManipulationSystem dmSystem;
+#endif
     AudioSystem as;
     AudioSystem::outputSystem()->initialize();
     AudioSystem::midiSystem()->initialize();

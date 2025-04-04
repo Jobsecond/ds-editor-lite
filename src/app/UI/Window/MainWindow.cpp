@@ -35,7 +35,11 @@
 #include <QProcess>
 #include <QSplitter>
 #include <QStatusBar>
+
 #include <QWKWidgets/widgetwindowagent.h>
+#ifdef Q_OS_WIN
+#  include <QWDMHCore/DirectManipulationSystem.h>
+#endif
 
 MainWindow::MainWindow() {
     setAcceptDrops(true);
@@ -151,6 +155,18 @@ MainWindow::MainWindow() {
 
 MainWindow::~MainWindow() {
     ThemeManager::instance()->removeWindow(this);
+}
+
+void MainWindow::showEvent(QShowEvent *event) {
+#ifdef Q_OS_WIN
+    QWDMH::DirectManipulationSystem::registerWindow(windowHandle());
+#endif
+}
+
+void MainWindow::hideEvent(QHideEvent *event) {
+#ifdef Q_OS_WIN
+    QWDMH::DirectManipulationSystem::unregisterWindow(windowHandle());
+#endif
 }
 
 void MainWindow::updateWindowTitle() {

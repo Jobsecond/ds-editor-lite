@@ -39,6 +39,10 @@ find_package(lyric-tab CONFIG REQUIRED)
 find_package(talcs REQUIRED)
 find_package(unofficial-tinyexpr CONFIG REQUIRED)
 
+if (WIN32)
+    find_package(QtWin32DirectManipulateHelper CONFIG REQUIRED)
+endif ()
+
 set(USE_LITE_CONTROLS OFF)
 
 find_path(INTERVAL_TREE_INCLUDE_DIRS "interval-tree/interval_tree.hpp" REQUIRED)
@@ -61,6 +65,12 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         curve-util::curve-util
         unofficial::tinyexpr::tinyexpr
 )
+
+if (WIN32)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+            QtWin32DirectManipulateHelper::Core
+    )
+endif ()
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE NOMINMAX)
 
